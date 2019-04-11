@@ -1,0 +1,11 @@
+<template>
+    <div>
+        <el-container>
+            <el-header>
+                <h1>
+                    管理员
+                </h1>
+            </el-header>
+        </el-container>
+    </div>
+</template>

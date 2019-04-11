@@ -1,0 +1,37 @@
+.vcenter {
+  color: black;
+  align-self: center;
+}
+
+.vfather {
+  display: flex;
+  text-align: center !important;
+  line-height: 1;
+}
+
+#tag {
+  margin-left: 10px;
+}
+
+.butt {
+  color: dimgrey !important;
+  font-size: 15px !important;
+  margin: 0 auto !important;
+  padding-bottom: 6px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+
+.buttonon {
+  background-color: #B3C9E0 !important;
+  color: white !important;
+}
+
+#learnHead {
+  padding-top: 30px;
+  background-color: white !important;
+}
+
+.el-breadcrumb {
+  font-size: 15px !important;
+}

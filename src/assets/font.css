@@ -1,0 +1,85 @@
+.title {
+  font-family: "Helvetica Neue", "Microsoft YaHei";
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(65, 55, 55);
+}
+
+.leadTitle {
+  font-family: "Helvetica Neue", "Microsoft YaHei";
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.huge {
+  font-size: 30px;
+}
+
+.arrow {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 120px;
+  background: url(../assets/arrow-lr.png) center;
+  z-index: 1;
+  border-radius: 7px;
+}
+
+.grid {
+  color: #b1bdca
+}
+
+.maintext {
+  font-family: "Helvetica Neue", "Microsoft YaHei";
+  font-size: 17px;
+}
+
+.mainText {
+  font-family: "Helvetica Neue", "Microsoft YaHei";
+  font-size: 14px;
+  padding-top: 10px;
+  color: rgb(228, 120, 120);
+}
+
+.card {
+  letter-spacing: 4px;
+  text-indent: 30px;
+}
+
+.whiteB {
+  box-shadow: 0 2px 8px 0 rgba(7, 17, 27, .06);
+}
+
+.normal {
+  line-height: 30px;
+  padding: 30px;
+  padding-bottom: 60px;
+}
+
+.titles {
+  text-align: center;
+}
+
+.ta {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.tb {
+  color: #93999f;
+  margin: 10px 0;
+}
+
+.grayB {
+  background-color: #F8FAFC;
+  box-shadow: 0 2px 4px 0 rgba(7, 17, 27, .06);
+}
+
+.el-card {
+  margin-top: 20px;
+}
+
+.el-card img {
+  width: 100%;
+}
