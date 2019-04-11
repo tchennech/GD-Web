@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <el-container style="height:700px">
+  <div style="height: 100%">
+    <el-container style="height: 100%">
       <el-aside style="border-right: solid 1px #e6e6e6;">
         <el-menu default-active="1-4-1"
                  class="el-menu-vertical-demo"
@@ -46,14 +46,15 @@
       </el-aside>
       <el-main>
         <div id="mainContent"
+             class="line"
              v-if="controlIndex == '0'">
-          <div class="line">
+          <div class="line grayBack">
             <h1 class="titleH1">病理图分类实验平台</h1>
             <p class="titleP">癌症病理图实验平台，集识别、分类、检测、数据管理一体</p>
           </div>
           <div class="line">
-            <img src="../assets/back.jpg"
-                 id="imgBack">
+            <!-- <img src="../assets/back.jpg"
+                  id="imgBack"> -->
           </div>
         </div>
         <div v-if="controlIndex == 1">
@@ -177,42 +178,40 @@
 </template>
 
 <script>
-import "element-ui/lib/theme-chalk/display.css";
-import upload from "@/components/upload";
-import dView from "@/views/graduate/dataView"
-import mView from "@/views/graduate/modelView"
+import 'element-ui/lib/theme-chalk/display.css'
+import upload from '@/components/upload'
+import dView from '@/views/graduate/dataView'
+import mView from '@/views/graduate/modelView'
 export default {
-  name: "gi",
+  name: 'gi',
   components: {
-    upload, dView, mView
+    upload,
+    dView,
+    mView
   },
   data () {
     return {
       controlIndex: '0',
       dialogVisible: false,
-      /*步骤条参数复用*/
+      phoneNum: '17730226403',
+      mailbox: '1729796645@qq.com',
+      /* 步骤条参数复用 */
       active: 0,
       lastStep: false,
       firstStep: true,
-      /*------------*/
-      /*训练*/
-      trainForm: {
-
-      },
-      trainRules: {
-
-      },
-      /*------------*/
+      /* ------------ */
+      /* 训练 */
+      trainForm: {},
+      trainRules: {}
+      /* ------------ */
     }
   },
   mounted () {
     this.personVisibal = false
   },
   methods: {
-    handleOpen () {
-    },
-    handleClose () {
-    },
+    handleOpen () { },
+    handleClose () { },
     newData () {
       this.controlIndex = 1
     },
@@ -223,52 +222,45 @@ export default {
       this.controlIndex = 3
     },
     trainModel () {
-      this.lastStep = false;
-      this.firstStep = true;
-      this.active = 0;
+      this.lastStep = false
+      this.firstStep = true
+      this.active = 0
       this.controlIndex = 4
     },
     predict () {
-      this.lastStep = false;
-      this.firstStep = true;
-      this.active = 0;
-      this.controlIndex = 5;
+      this.lastStep = false
+      this.firstStep = true
+      this.active = 0
+      this.controlIndex = 5
     },
-    //下一步
+    // 下一步
     next () {
-      this.active++;
-      if (this.active == 2) {
-        this.lastStep = true;
+      this.active++
+      if (this.active === 2) {
+        this.lastStep = true
       } else if (this.active > 0) {
-        this.firstStep = false;
+        this.firstStep = false
       }
     },
-    //上一步
+    // 上一步
     back () {
-      this.active--;
-      if (this.active == 0) {
-        this.firstStep = true;
+      this.active--
+      if (this.active === 0) {
+        this.firstStep = true
       } else if (this.active < 2) {
-        this.lastStep = false;
+        this.lastStep = false
       }
     },
-    //训练
-    submitTrainForm () {
-
-    },
+    // 训练
+    submitTrainForm () { },
     resetTrainForm () {
       this.trainForm = {}
     },
-    //预测
-    startPredict () {
-
-    },
-    startTrain () {
-
-    }
-
+    // 预测
+    startPredict () { },
+    startTrain () { }
   }
-};
+}
 </script>
 
 <style>
@@ -277,15 +269,18 @@ export default {
   margin: 0;
   padding: 0;
 }
-#imgBack {
-  width: 80%;
-  /* height: 100%;
-  background: url('../assets/back.jpg');
-  background-size: 100% 100%; */
+#mainContent {
+  width: 100%;
+  height: 100%;
+  background: url("../assets/back.jpg");
+  background-size: 100% 100%;
   text-align: center;
   border-radius: 9px;
+  display: flex;
+  justify-content: center;
+  align-items: Center;
 }
-#mainContent {
+#imgBack {
   width: 100%;
   height: 100%;
 }
@@ -295,17 +290,48 @@ export default {
 .line {
   text-align: center;
 }
+.grayBack {
+  background-color: rgba(146, 130, 111, 0.548);
+  width: 100%;
+  padding: 20px;
+}
 .titleH1 {
   font-size: 34px;
   margin: 0;
   margin-bottom: 10px;
   line-height: 48px;
-  color: #555;
+  color: rgb(255, 245, 233);
 }
 .titleP {
   font-size: 18px;
   line-height: 28px;
-  color: #888;
+  color: rgb(255, 238, 230);
   margin: 10px 0 5px;
+}
+.ioc {
+  padding-top: 30px;
+  padding-left: 60px;
+  /* text-align: center; */
+}
+.ioc > .el-button {
+  margin: 0;
+}
+.footer {
+  /* background-color: rgb(161, 161, 161); */
+  padding-top: 20px;
+  height: 200px;
+  margin-left: 0;
+}
+
+.footTitle {
+  background-color: rgba(194, 220, 243, 0.548);
+  font-size: 20px;
+  padding: 3px;
+  text-align: center;
+  border-radius: 30px;
+  margin-bottom: 10px;
+}
+img {
+  width: 100%;
 }
 </style>

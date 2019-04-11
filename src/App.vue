@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <!-- 个人主页的导航 -->
     <div v-if="$route.meta.keepAlive">
       <keep-alive>
@@ -11,7 +11,8 @@
         <gHead></gHead>
       </keep-alive>
     </div>
-    <div id="mains">
+    <div id="mains"
+         style="height: 92%">
       <div v-if="$route.meta.keepAlive">
         <keep-alive>
           <el-popover placement="top"
@@ -38,30 +39,30 @@
           </el-popover>
         </keep-alive>
       </div>
-      <router-view/>
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import "element-ui/lib/theme-chalk/display.css";
+import 'element-ui/lib/theme-chalk/display.css'
 import pHead from '@/components/personHead.vue'
 import gHead from '@/components/graHead.vue'
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     pHead, gHead
   },
   data () {
     return {
-      textarea: '',
+      textarea: ''
     }
   },
 
   methods: {
   }
-};
+}
 </script>
 
 <style>
@@ -78,6 +79,10 @@ export default {
 }
 #mains {
   /* background-color: #f3f5f7; */
+}
+html,
+body {
+  height: 100%;
 }
 body {
   width: 100%;

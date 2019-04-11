@@ -37,6 +37,8 @@
               <div class="el-upload__text">将文件拖到此处，或
                 <em>点击上传</em>
               </div>
+              <div class="el-upload__text">大于10个图片请添加为压缩文件再上传
+              </div>
             </el-upload>
           </el-form-item>
         </el-col>
@@ -56,14 +58,14 @@
 </template>
 
 <script>
-import "element-ui/lib/theme-chalk/display.css";
+import 'element-ui/lib/theme-chalk/display.css';
 export default {
-  name: "upload",
+  name: 'upload',
   data () {
     return {
-      acceptable: ".jpg",
-      formLabelWidth: "500",
-      labelWidth: "500",
+      acceptable: '.jpg',
+      formLabelWidth: '500',
+      labelWidth: '500',
       fileList: [],
       form: {
         flodName: '',
@@ -80,22 +82,22 @@ export default {
   methods: {
     addFile (file, fileList) {
       this.fileList = fileList
-      console.log(file, this.fileList);
+      console.log(file, this.fileList)
     },
     uploadUrl () {
-      return "xxxxxxx"
+      return 'xxxxxxx'
     },
     handleRemove (file, fileList) {
-      console.log(file, fileList);
+      console.log(file, fileList)
       this.fileList = fileList
     },
     handlePreview (file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
     },
     newData () {
 
-    },
+    }
     /*
     onSubmit(){
          this.form={
@@ -105,7 +107,7 @@ export default {
           }
           let file=''
         for(let x in this.form){
- 
+
           this.param.append(x,this.form[x])
         }
         for(let i=0;i<this.fileList.length;i++){
@@ -113,14 +115,14 @@ export default {
           this.count++
           this.param.append(file,this.fileList[i].raw)
         }
-        batchTagInfo(this.param) 
+        batchTagInfo(this.param)
           .then(res=>{
             alert(res)
           })
       }
       */
   }
-};
+}
 </script>
 
 <style>
