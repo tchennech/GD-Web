@@ -58,17 +58,21 @@
           </div>
         </div>
         <div v-if="controlIndex == 1">
+          <h2 class="titleM">数据上传</h2>
           <upload></upload>
         </div>
         <div v-if="controlIndex == 2">
+          <h2 class="titleM">数据一览</h2>
           <d-view></d-view>
         </div>
         <div v-if="controlIndex == 3">
+          <h2 class="titleM">模型一览</h2>
           <m-view></m-view>
         </div>
 
         <!-- 训练 -->
         <div v-if="controlIndex == 4">
+          <h2 class="titleM">模型训练</h2>
           <el-steps :active="active"
                     finish-status="success">
             <!-- 第一步 -->
@@ -142,6 +146,7 @@
 
         <!-- 预测 -->
         <div v-if="controlIndex == 5">
+          <h2 class="titleM">结果预测</h2>
           <!-- <keep-alive> -->
           <el-steps :active="active"
                     finish-status="success">
@@ -272,7 +277,7 @@ export default {
 #mainContent {
   width: 100%;
   height: 100%;
-  background: url("../assets/back.jpg");
+  background: url('../assets/back.jpg');
   background-size: 100% 100%;
   text-align: center;
   border-radius: 9px;
@@ -291,7 +296,7 @@ export default {
   text-align: center;
 }
 .grayBack {
-  background-color: rgba(146, 130, 111, 0.548);
+  background-color: rgba(21, 126, 175, 0.548);
   width: 100%;
   padding: 20px;
 }
@@ -308,6 +313,13 @@ export default {
   color: rgb(255, 238, 230);
   margin: 10px 0 5px;
 }
+.titleM {
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, SimSun, sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
 .ioc {
   padding-top: 30px;
   padding-left: 60px;
@@ -315,21 +327,6 @@ export default {
 }
 .ioc > .el-button {
   margin: 0;
-}
-.footer {
-  /* background-color: rgb(161, 161, 161); */
-  padding-top: 20px;
-  height: 200px;
-  margin-left: 0;
-}
-
-.footTitle {
-  background-color: rgba(194, 220, 243, 0.548);
-  font-size: 20px;
-  padding: 3px;
-  text-align: center;
-  border-radius: 30px;
-  margin-bottom: 10px;
 }
 img {
   width: 100%;

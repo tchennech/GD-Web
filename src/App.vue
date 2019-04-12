@@ -12,7 +12,7 @@
       </keep-alive>
     </div>
     <div id="mains"
-         style="height: 92%">
+         style="height: 91%">
       <div v-if="$route.meta.keepAlive">
         <keep-alive>
           <el-popover placement="top"
