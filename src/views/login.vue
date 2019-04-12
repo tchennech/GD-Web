@@ -43,67 +43,66 @@ export default {
   },
   methods: {
     login () {
-      if (this.username == "" || this.password == "") {
+      if (this.username === '' || this.password === '') {
         this.$message({
-          message: "请输入用户名或密码",
-          type: "warning"
-        });
+          message: '请输入用户名或密码',
+          type: 'warning'
+        })
       } else {
-        //过滤字符
+        // 过滤字符
         let datas = {
           userName: this.username,
           password: this.password
-        };
+        }
         let posts = {
           datal: JSON.stringify(datas)
-        };
-        this.$http.post("/api/userlogin.action", posts).then(
+        }
+        this.$http.post('/api/userlogin.action', posts).then(
           function (res) {
-            let result = JSON.parse(res.bodyText);
+            let result = JSON.parse(res.bodyText)
             console.log(result)
-            if (result.status == 1) {
+            if (result.status === 1) {
               this.$message({
-                message: "登录失败:" + result.msg,
-                type: "warning"
-              });
+                message: '登录失败:' + result.msg,
+                type: 'warning'
+              })
             } else {
               this.$message({
-                message: "登录成功",
-                type: "success"
-              });
-              let data = JSON.parse(result.data);
+                message: '登录成功',
+                type: 'success'
+              })
+              let data = JSON.parse(result.data)
               if (data.role === 1) {
                 setTimeout(
                   function () {
                     this.$router.push({
-                      path: "/handsome",
-                      name: "adindex",
+                      path: '/handsome',
+                      name: 'adindex',
                       params: res
-                    });
+                    })
                   }.bind(this),
                   1000
-                );
+                )
               } else {
                 setTimeout(
                   function () {
                     this.$router.push({
-                      path: "/pe",
-                      name: "pe",
-                    });
+                      path: '/pe',
+                      name: 'pe'
+                    })
                   }.bind(this),
                   1000
-                );
+                )
               }
-
             }
           },
           function (err) {
-            this.$message.error("服务器请求错误");
+            this.$message.error('服务器请求错误')
           }
-        );
+        )
       }
-    },
-  },
+    }
+  }
 }
 </script>
 <style>
@@ -112,7 +111,7 @@ export default {
 }
 #loginTitle {
   font-size: 30px;
-  font-family: 'youyuan';
+  font-family: "youyuan";
   font-weight: bold;
   margin: 20px 0;
   text-align: center;
