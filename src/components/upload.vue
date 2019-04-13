@@ -21,17 +21,19 @@
           <el-form-item label="上传文件:"
                         prop="files"
                         :label-width="formLabelWidth">
-            <el-upload class="upload-demo"
-                       ref="upload"
-                       :file-list="fileList"
+            <el-upload :file-list="fileList"
                        :accept="acceptable"
+                       ref="upload"
                        :on-preview="handlePreview"
                        :on-remove="handleRemove"
                        :action="uploadUrl()"
                        :on-change="addFile"
+                       :data="realPath"
                        :auto-upload="false"
                        :drag="true"
                        :limit="10"
+                       :on-error="uploadError"
+                       :on-success="uploadSuccess"
                        multiple>
               <div class="el-upload__text">将文件拖到此处，或
                 <em>点击上传</em>
@@ -68,9 +70,10 @@ export default {
       fileList: [],
       form: {
         flodName: '',
-        files: [],
+        num: 0,
         author: 'tchennech'
       },
+      realPath: { path: '' },
       rules: {},
       dialogVisible: false,
       dialogImageUrl: ''
@@ -85,7 +88,7 @@ export default {
       console.log(file, this.fileList)
     },
     uploadUrl () {
-      return 'xxxxxxx'
+      return '/api/upLoadImg.action'
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -97,11 +100,33 @@ export default {
       this.dialogVisible = true
     },
     newData () {
-      let fileLists = []
-      for (let x in this.fileList) {
-        fileLists.push({ name: this.fileList[x].name, url: this.fileList[x].url })
+      if (this.fileList.length === 0) {
+        this.$message({
+          message: '请添加文件',
+          type: 'warning'
+        })
+        return
       }
-      this.form.files = fileLists
+      this.$confirm('确认选择完毕全部文件', '是否直接上传 ? ', '提示', {
+        confirmButtonText: '上传',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '请求成功，系统正在处理'
+        })
+        this.uploadInfo()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
+    uploadInfo () {
+      this.form.num = this.fileList.length
+      // 请求后台，返回路径
       let posts = {
         datal: JSON.stringify(this.form)
       }
@@ -111,7 +136,7 @@ export default {
           console.log(result)
           if (result.status === 1) {
             this.$message({
-              message: '上传失败:' + result.msg,
+              message: '服务器请求失败:' + result.msg,
               type: 'warning'
             })
           } else {
@@ -119,35 +144,36 @@ export default {
               message: '上传成功',
               type: 'success'
             })
-            // let data = JSON.parse(result.data)
-            // if (data.role === 1) {
-            //   setTimeout(
-            //     function () {
-            //       this.$router.push({
-            //         path: '/handsome',
-            //         name: 'adindex',
-            //         params: res
-            //       })
-            //     }.bind(this),
-            //     1000
-            //   )
-            // } else {
-            //   setTimeout(
-            //     function () {
-            //       this.$router.push({
-            //         path: '/pe',
-            //         name: 'pe'
-            //       })
-            //     }.bind(this),
-            //     1000
-            //   )
-            // }
+            this.realPath.path = result.path
+            this.upLoadFiles()
           }
-        },
-        function (err) {
+        }, function (err) {
           this.$message.error('服务器请求错误')
         }
       )
+    },
+    uploadSuccess (response, file, fileList) {
+      console.log('上传文件成功response', response)
+      console.log('上传文件成功file', file)
+      console.log('上传文件成功fileList', fileList)
+      // response：即为后端传来的数据，这里我返回的是图片的路径
+    },
+    uploadError (response, file, fileList) {
+      console.log('上传文件失败response', response)
+      console.log('上传文件失败file', file)
+      console.log('上传文件失败fileList', fileList)
+    },
+    upLoadFiles () {
+      this.$refs.upload.submit()
+      // setTimeout(
+      //   function () {
+      //     this.$router.push({
+      //       path: '/handsome',
+      //       name: 'adindex'
+      //     })
+      //   }.bind(this),
+      //   1000
+      // )
     }
     /*
     onSubmit(){
