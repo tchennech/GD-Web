@@ -23,6 +23,7 @@
                         :label-width="formLabelWidth">
             <el-upload class="upload-demo"
                        ref="upload"
+                       :with-credentials="true"
                        :file-list="fileList"
                        :accept="acceptable"
                        :on-preview="handlePreview"
@@ -57,7 +58,7 @@
 </template>
 
 <script>
-import 'element-ui/lib/theme-chalk/display.css'
+import 'element-ui/lib/theme-chalk/display.css';
 export default {
   name: 'upload',
   data () {
@@ -68,8 +69,7 @@ export default {
       fileList: [],
       form: {
         flodName: '',
-        files: [],
-        author: 'tchennech'
+        files: []
       },
       rules: {},
       dialogVisible: false,
@@ -92,62 +92,11 @@ export default {
       this.fileList = fileList
     },
     handlePreview (file) {
-      console.log(file)
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
     newData () {
-      let fileLists = []
-      for (let x in this.fileList) {
-        fileLists.push({ name: this.fileList[x].name, url: this.fileList[x].url })
-      }
-      this.form.files = fileLists
-      let posts = {
-        datal: JSON.stringify(this.form)
-      }
-      this.$http.post('/api/upLoadData.action', posts).then(
-        function (res) {
-          let result = JSON.parse(res.bodyText)
-          console.log(result)
-          if (result.status === 1) {
-            this.$message({
-              message: '上传失败:' + result.msg,
-              type: 'warning'
-            })
-          } else {
-            this.$message({
-              message: '上传成功',
-              type: 'success'
-            })
-            // let data = JSON.parse(result.data)
-            // if (data.role === 1) {
-            //   setTimeout(
-            //     function () {
-            //       this.$router.push({
-            //         path: '/handsome',
-            //         name: 'adindex',
-            //         params: res
-            //       })
-            //     }.bind(this),
-            //     1000
-            //   )
-            // } else {
-            //   setTimeout(
-            //     function () {
-            //       this.$router.push({
-            //         path: '/pe',
-            //         name: 'pe'
-            //       })
-            //     }.bind(this),
-            //     1000
-            //   )
-            // }
-          }
-        },
-        function (err) {
-          this.$message.error('服务器请求错误')
-        }
-      )
+
     }
     /*
     onSubmit(){
