@@ -92,7 +92,10 @@
           <!-- 页面 -->
           <!-- 选择数据部分 -->
           <d-view :visi-type="false"
-                  v-show="active == 0"></d-view>
+                  v-show="active == 0"
+                  @showbox="getData"
+                  :data="data"
+                  :key="1"></d-view>
           <!-- 参数部分 -->
           <div v-show="active == 1">
             <!-- 学习率 weight batch_size 标识 图片大小-->
@@ -102,12 +105,10 @@
                      label-width="100px"
                      class="demo-trainForm">
               <el-form-item label="唯一标识"
-                            prop="name"
-                            required>
+                            prop="name">
                 <el-input v-model="trainForm.name"></el-input>
               </el-form-item>
-              <el-form-item label="图片大小"
-                            required>
+              <el-form-item label="图片大小">
                 <el-col :span="11">
                   <el-form-item prop="imgSize1">
                     <el-input v-model="trainForm.imgSize1"></el-input>
@@ -139,9 +140,11 @@
             </el-form>
           </div>
           <!-- 训练 -->
-          <div v-show="active == 2">第3步
-            <el-button @click="startTrain"
-                       v-if="lastStep">开始训练</el-button>
+          <div v-show="active == 2">
+            <div style="margin-top: 30px">
+              <el-button @click="startTrain"
+                         v-if="lastStep">开始训练</el-button>
+            </div>
           </div>
         </div>
 
@@ -167,15 +170,21 @@
 
           <!-- 页面 -->
           <!-- 选择数据部分 -->
-          <d-view v-show="active == 0"></d-view>
+          <d-view :visi-type="false"
+                  v-show="active == 0"
+                  @showbox="getData"
+                  :data="data"
+                  :key="2"></d-view>
           <!-- 选择模型部分 -->
           <div v-show="active == 1">
             <m-view></m-view>
           </div>
           <!-- 预测 -->
-          <div v-show="active == 2">第3步
-            <el-button @click="startPredict"
-                       v-if="lastStep">开始预测</el-button>
+          <div v-show="active == 2">
+            <div style="margin-top: 30px">
+              <el-button @click="startPredict"
+                         v-if="lastStep">开始预测</el-button>
+            </div>
           </div>
         </div>
       </el-main>
@@ -199,16 +208,22 @@ export default {
     return {
       controlIndex: '0',
       dialogVisible: false,
-      phoneNum: '17730226403',
-      mailbox: '1729796645@qq.com',
       /* 步骤条参数复用 */
       active: 0,
       lastStep: false,
       firstStep: true,
+      nextFlag: 0,
       /* ------------ */
       /* 训练 */
       trainForm: {},
-      trainRules: {}
+      trainFormTrue: {},
+      trainRules: { name: [
+        { required: true, message: '请输入模型标识', trigger: 'blur' }
+      ],
+      imgSize1: [{ required: true, message: '请输入图片大小', trigger: 'blur' }],
+      imgSize2: [{ required: true, message: '请输入图片大小', trigger: 'blur' }]
+      },
+      data: {}
       /* ------------ */
     }
   },
@@ -231,16 +246,45 @@ export default {
       this.lastStep = false
       this.firstStep = true
       this.active = 0
+      this.nextFlag = 0
+
       this.controlIndex = 4
     },
     predict () {
       this.lastStep = false
       this.firstStep = true
       this.active = 0
+      this.nextFlag = 0
       this.controlIndex = 5
     },
     // 下一步
     next () {
+      if (this.active + 1 > this.nextFlag) {
+        this.$message({
+          message: '请完成本步骤',
+          type: 'warning'
+        })
+        return
+      }
+      if (this.active === 1 && this.controlIndex === 4) {
+        if (JSON.stringify(this.trainFormTrue) !== JSON.stringify(this.trainForm)) {
+          this.$confirm('您修改的数据尚未提交', '是否直接进行下一步 ? ', '提示', {
+            confirmButtonText: '继续',
+            cancelButtonText: '返回提交',
+            type: 'warning'
+          }).then(() => {
+            this.nextRight()
+          }).catch(() => {
+
+          })
+        } else {
+          this.nextRight()
+        }
+      } else {
+        this.nextRight()
+      }
+    },
+    nextRight () {
       this.active++
       if (this.active === 2) {
         this.lastStep = true
@@ -258,9 +302,31 @@ export default {
       }
     },
     // 训练
-    submitTrainForm () { },
+    submitTrainForm () {
+      this.$refs['trainForm'].validate((valid) => {
+        if (valid) {
+          this.$message({
+            message: '成功提交',
+            type: 'success'
+          })
+          let obj = JSON.stringify(this.trainForm)
+          this.trainFormTrue = JSON.parse(obj)
+          this.nextFlag = 2
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     resetTrainForm () {
-      this.trainForm = {}
+      this.trainForm = this.trainFormTrue
+    },
+    getData (data) {
+      if (data != null) {
+        this.nextFlag = 1
+        console.log(data)
+        this.data = data
+      }
     },
     // 预测
     startPredict () { },
@@ -278,7 +344,7 @@ export default {
 #mainContent {
   width: 100%;
   height: 100%;
-  background: url('../assets/back.jpg');
+  background: url("../assets/back.jpg");
   background-size: 100% 100%;
   text-align: center;
   border-radius: 9px;
@@ -331,5 +397,9 @@ export default {
 }
 img {
   width: 100%;
+}
+.demo-trainForm {
+  margin-top: 30px;
+  width: 80%;
 }
 </style>

@@ -39,9 +39,17 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     v-if="!visiType"
-                     @click="chooseData(scope.$index, scope.row)">选择</el-button>
+          <div v-show="choose !== scope.$index">
+            <el-button size="mini"
+                       v-if="!visiType"
+                       @click="chooseData(scope.$index, scope.row)">选择</el-button>
+          </div>
+          <el-button v-show="choose === scope.$index"
+                     type="success"
+                     size="mini"
+                     icon="el-icon-check"
+                     style="margin-left:13px"
+                     circle></el-button>
           <el-button size="mini"
                      v-if="visiType"
                      type="danger"
@@ -63,13 +71,13 @@
 </template>
 
 <script>
-import "element-ui/lib/theme-chalk/display.css";
-import upload from "@/components/upload";
+import 'element-ui/lib/theme-chalk/display.css'
+import upload from '@/components/upload'
 
 export default {
-  name: "dView",
+  name: 'dView',
   components: {
-    upload,
+    upload
   },
   props: {
     visiType: {
@@ -81,19 +89,20 @@ export default {
     return {
       tableData: [],
       imgsLists: [],
+      choose: -1,
       dialogVisible: false,
       flag: false,
       pageSizes: [5, 10, 15],
       pageSize: 5,
       totalNum: 0,
-      currentPage: 1,
+      currentPage: 1
     }
   },
   mounted () {
     this.getData()
   },
   methods: {
-    //获取全部数据
+    // 获取全部数据
     getData () {
       this.$http.post('/api/getAllData.action').then(
         function (res) {
@@ -115,11 +124,12 @@ export default {
         }
       )
     },
-    //选择模型
+    // 选择数据
     chooseData (index, row) {
-
+      this.choose = index
+      this.tolkToFather(row)
     },
-    //删除模型
+    // 删除数据
     handleDelete (index, row) {
 
     },
@@ -140,9 +150,11 @@ export default {
     handleCurrentChange (val) {
       this.tableData = this.imgsLists.slice((val - 1) * this.pageSize, val * this.pageSize)
     },
-
+    tolkToFather (data) {
+      this.$emit('showbox', data)
+    }
   }
-};
+}
 </script>
 
 <style>

@@ -92,11 +92,11 @@ export default {
       return '/api/upLoadImg.action'
     },
     handleRemove (file, fileList) {
-      console.log("移出", file, fileList)
+      console.log('移出', file, fileList)
       this.fileList = fileList
     },
     handlePreview (file) {
-      console.log("查看", file)
+      console.log('查看', file)
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
@@ -155,7 +155,7 @@ export default {
     },
     uploadSuccess (response, file, fileList) {
       this.count++
-      console.log("成功上传", this.count)
+      console.log('成功上传', this.count)
       if (this.count >= this.fileList.length) {
         this.finishWork(true)
       }
@@ -174,13 +174,12 @@ export default {
         this.form.flodName = ''
         this.form.num = 0
         this.fileList = []
-        this.$refs.upload.clearFiles();
-        console.log("成功")
-        this.$emit('showbox', flag);
+        this.$refs.upload.clearFiles()
+        console.log('成功')
+        this.$emit('showbox', flag)
       }.bind(this),
-        500
+      500
       )
-
     }
   }
 }
