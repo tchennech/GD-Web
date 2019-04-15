@@ -63,7 +63,7 @@
         </div>
         <div v-if="controlIndex == 2">
           <h2 class="titleM">数据一览</h2>
-          <d-view></d-view>
+          <d-view :visi-type="true"></d-view>
         </div>
         <div v-if="controlIndex == 3">
           <h2 class="titleM">模型一览</h2>
@@ -91,7 +91,8 @@
                      v-if="!lastStep">下一步</el-button>
           <!-- 页面 -->
           <!-- 选择数据部分 -->
-          <d-view v-show="active == 0"></d-view>
+          <d-view :visi-type="false"
+                  v-show="active == 0"></d-view>
           <!-- 参数部分 -->
           <div v-show="active == 1">
             <!-- 学习率 weight batch_size 标识 图片大小-->

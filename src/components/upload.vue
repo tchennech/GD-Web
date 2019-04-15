@@ -67,6 +67,7 @@ export default {
       acceptable: '.jpg',
       formLabelWidth: '500',
       labelWidth: '500',
+      count: 0,
       fileList: [],
       form: {
         flodName: '',
@@ -84,18 +85,18 @@ export default {
   },
   methods: {
     addFile (file, fileList) {
+      this.count++
       this.fileList = fileList
-      console.log(file, this.fileList)
     },
     uploadUrl () {
       return '/api/upLoadImg.action'
     },
     handleRemove (file, fileList) {
-      console.log(file, fileList)
+      console.log("移出", file, fileList)
       this.fileList = fileList
     },
     handlePreview (file) {
-      console.log(file)
+      console.log("查看", file)
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
@@ -153,9 +154,11 @@ export default {
       )
     },
     uploadSuccess (response, file, fileList) {
-      console.log('上传文件成功response', response)
-      console.log('上传文件成功file', file)
-      console.log('上传文件成功fileList', fileList)
+      this.count++
+      console.log("成功上传", this.count)
+      if (this.count >= this.fileList.length) {
+        this.finishWork(true)
+      }
       // response：即为后端传来的数据，这里我返回的是图片的路径
     },
     uploadError (response, file, fileList) {
@@ -165,39 +168,20 @@ export default {
     },
     upLoadFiles () {
       this.$refs.upload.submit()
-      // setTimeout(
-      //   function () {
-      //     this.$router.push({
-      //       path: '/handsome',
-      //       name: 'adindex'
-      //     })
-      //   }.bind(this),
-      //   1000
-      // )
-    }
-    /*
-    onSubmit(){
-         this.form={
-            a:1,
-            b:2,
-            c:3
-          }
-          let file=''
-        for(let x in this.form){
+    },
+    finishWork (flag) {
+      setTimeout(function () {
+        this.form.flodName = ''
+        this.form.num = 0
+        this.fileList = []
+        this.$refs.upload.clearFiles();
+        console.log("成功")
+        this.$emit('showbox', flag);
+      }.bind(this),
+        500
+      )
 
-          this.param.append(x,this.form[x])
-        }
-        for(let i=0;i<this.fileList.length;i++){
-          file='file'+this.count
-          this.count++
-          this.param.append(file,this.fileList[i].raw)
-        }
-        batchTagInfo(this.param)
-          .then(res=>{
-            alert(res)
-          })
-      }
-      */
+    }
   }
 }
 </script>
