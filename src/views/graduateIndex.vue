@@ -208,13 +208,45 @@
                   :key="2"></d-view>
           <!-- 选择模型部分 -->
           <div v-show="active == 1">
-            <m-view></m-view>
+            <m-view :visi-type="false"
+                    @showbox="getModel"
+                    :model="model"
+                    :key="2"></m-view>
           </div>
           <!-- 预测 -->
           <div v-show="active == 2">
             <div style="margin-top: 30px">
               <el-button @click="startPredict"
                          v-if="lastStep">开始预测</el-button>
+              <el-row type="flex"
+                      justify="space-around">
+                <el-col :span="10">
+                  <el-card class="box-card">
+                    <div slot="header"
+                         class="clearfix">
+                      <span>训练数据</span>
+                    </div>
+                    <div v-for="(value, key) of data"
+                         :key="key"
+                         class="text item">
+                      {{key+': ' + value}}
+                    </div>
+                  </el-card>
+                </el-col>
+                <el-col :span="10">
+                  <el-card class="box-card">
+                    <div slot="header"
+                         class="clearfix">
+                      <span>训练参数</span>
+                    </div>
+                    <div v-for="(value, key) of model"
+                         :key="key"
+                         class="text item">
+                      {{key+': ' + value}}
+                    </div>
+                  </el-card>
+                </el-col>
+              </el-row>
             </div>
           </div>
         </div>
@@ -248,13 +280,14 @@ export default {
       /* 训练 */
       trainForm: {},
       trainFormTrue: {},
-      trainRules: {        name: [
-          { required: true, message: '请输入模型标识', trigger: 'blur' }
-        ],
-        imgSize1: [{ required: true, message: '请输入图片大小', trigger: 'blur' }],
-        imgSize2: [{ required: true, message: '请输入图片大小', trigger: 'blur' }]
+      trainRules: { name: [
+        { required: true, message: '请输入模型标识', trigger: 'blur' }
+      ],
+      imgSize1: [{ required: true, message: '请输入图片大小', trigger: 'blur' }],
+      imgSize2: [{ required: true, message: '请输入图片大小', trigger: 'blur' }]
       },
-      data: {}
+      data: {},
+      model: {}
       /* ------------ */
     }
   },
@@ -278,7 +311,7 @@ export default {
       this.firstStep = true
       this.active = 0
       this.nextFlag = 0
-
+      this.data = {}
       this.controlIndex = 4
     },
     predict () {
@@ -286,6 +319,8 @@ export default {
       this.firstStep = true
       this.active = 0
       this.nextFlag = 0
+      this.data = {}
+      this.model = {}
       this.controlIndex = 5
     },
     // 下一步
@@ -376,10 +411,32 @@ export default {
         this.data = data
       }
     },
+    getModel (model) {
+      if (model != null) {
+        this.nextFlag = 2
+        console.log(model)
+        delete model.path
+        this.model = model
+      }
+    },
     // 预测
     startPredict () {
-
-    },
+      let form = {}
+      form.dataId = this.data.id
+      form.modelId = this.model.id
+      let posts = {
+        datal: JSON.stringify(form)
+      }
+      this.$http.post('/api/predict.action', posts).then(
+        function (res) {
+          let result = JSON.parse(res.bodyText)
+          console.log(result)
+        },
+        function (err) {
+          this.$message.error('服务器请求错误')
+        }
+      )
+    }
 
   }
 }
@@ -456,6 +513,9 @@ img {
   width: 80%;
   min-width: 200px;
 }
+.toolbar {
+  overflow: auto;
+}
 .text {
   font-size: 14px;
 }
@@ -474,5 +534,23 @@ img {
 }
 .el-card__body {
   height: 200px;
+  overflow: auto;
+}
+.el-card__body::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+.el-card__body::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 5px rgba(73, 110, 131, 0.589);
+  background: #5f5151;
+}
+.el-card__body::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(46, 46, 46, 0.2);
+  border-radius: 10px;
+  background: #ffffff;
 }
 </style>

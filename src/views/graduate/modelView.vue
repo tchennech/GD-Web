@@ -4,6 +4,7 @@
               style="width: 100%">
       <el-table-column label="日期"
                        width="220"
+                       prop="saveTime"
                        sortable>
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
@@ -53,7 +54,7 @@
           <div v-show="choose !== scope.$index">
             <el-button size="mini"
                        v-if="!visiType"
-                       @click="chooseData(scope.$index, scope.row)">选择</el-button>
+                       @click="chooseModel(scope.$index, scope.row)">选择</el-button>
           </div>
           <el-button v-show="choose === scope.$index"
                      size="mini"
@@ -81,9 +82,9 @@
 </template>
 
 <script>
-import "element-ui/lib/theme-chalk/display.css";
+import 'element-ui/lib/theme-chalk/display.css'
 export default {
-  name: "mView",
+  name: 'mView',
   props: {
     visiType: {
       type: Boolean,
@@ -118,8 +119,11 @@ export default {
               type: 'warning'
             })
           } else {
-            console.log(result.datas)
             this.modelsLists = JSON.parse(result.datas)
+            // for (let x in this.modelsLists) {
+            //   this.modelsLists[x].saveTime = new Date(this.modelsLists[x].saveTime)
+            // }
+            console.log(this.modelsLists)
             this.totalNum = this.modelsLists.length
             this.handleCurrentChange(1)
           }
@@ -128,13 +132,48 @@ export default {
         }
       )
     },
-    //选择模型
+    // 选择模型
     chooseModel (index, row) {
-
+      this.choose = index
+      this.tolkToFather(row)
     },
-    //删除模型
+    // 删除模型
     handleDelete (index, row) {
-
+      this.$confirm('此操作将删除该模型, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteModel(row.id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    deleteModel (id) {
+      let form = {}
+      form.id = id
+      let posts = {
+        datal: JSON.stringify(form)
+      }
+      this.$http.post('/api/deleteModel.action', posts).then(
+        function (res) {
+          let result = JSON.parse(res.bodyText)
+          console.log(result)
+          if (result.status === 0) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.getData()
+          }
+        },
+        function (err) {
+          this.$message.error('服务器请求错误')
+        }
+      )
     },
     handleSizeChange (val) {
       this.pageSize = val
@@ -148,7 +187,7 @@ export default {
       this.$emit('showbox', data)
     }
   }
-};
+}
 </script>
 
 <style>

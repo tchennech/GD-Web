@@ -12,6 +12,7 @@
               style="width: 100%">
       <el-table-column label="日期"
                        width="240"
+                       prop="saveTime"
                        sortable>
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
@@ -130,7 +131,41 @@ export default {
     },
     // 删除数据
     handleDelete (index, row) {
-
+      this.$confirm('此操作将删除该数据集, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteModel(row.id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    deleteModel (id) {
+      let form = {}
+      form.id = id
+      let posts = {
+        datal: JSON.stringify(form)
+      }
+      this.$http.post('/api/deleteData.action', posts).then(
+        function (res) {
+          let result = JSON.parse(res.bodyText)
+          console.log(result)
+          if (result.status === 0) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.getData()
+          }
+        },
+        function (err) {
+          this.$message.error('服务器请求错误')
+        }
+      )
     },
     getStatus (flag) {
       console.log(flag)
