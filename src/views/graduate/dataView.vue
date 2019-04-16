@@ -45,11 +45,10 @@
                        @click="chooseData(scope.$index, scope.row)">选择</el-button>
           </div>
           <el-button v-show="choose === scope.$index"
-                     type="success"
                      size="mini"
                      icon="el-icon-check"
-                     style="margin-left:13px"
-                     circle></el-button>
+                     circle>
+          </el-button>
           <el-button size="mini"
                      v-if="visiType"
                      type="danger"
@@ -166,6 +165,9 @@ export default {
 .pagination {
   width: 100%;
   margin-top: 20px;
+  text-align: center;
+}
+.cell {
   text-align: center;
 }
 </style>

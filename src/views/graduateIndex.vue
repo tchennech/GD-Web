@@ -108,7 +108,8 @@
                             prop="name">
                 <el-input v-model="trainForm.name"></el-input>
               </el-form-item>
-              <el-form-item label="图片大小">
+              <el-form-item label="图片大小"
+                            required>
                 <el-col :span="11">
                   <el-form-item prop="imgSize1">
                     <el-input v-model="trainForm.imgSize1"></el-input>
@@ -144,6 +145,36 @@
             <div style="margin-top: 30px">
               <el-button @click="startTrain"
                          v-if="lastStep">开始训练</el-button>
+              <el-row type="flex"
+                      justify="space-around">
+                <el-col :span="10">
+                  <el-card class="box-card">
+                    <div slot="header"
+                         class="clearfix">
+                      <span>训练数据</span>
+                    </div>
+                    <div v-for="(value, key) of data"
+                         :key="key"
+                         class="text item">
+                      {{key+': ' + value}}
+                    </div>
+                  </el-card>
+                </el-col>
+                <el-col :span="10">
+                  <el-card class="box-card">
+                    <div slot="header"
+                         class="clearfix">
+                      <span>训练参数</span>
+                    </div>
+                    <div v-for="(value, key) of trainFormTrue"
+                         :key="key"
+                         class="text item">
+                      {{key+': ' + value}}
+                    </div>
+                  </el-card>
+                </el-col>
+              </el-row>
+
             </div>
           </div>
         </div>
@@ -217,11 +248,11 @@ export default {
       /* 训练 */
       trainForm: {},
       trainFormTrue: {},
-      trainRules: { name: [
-        { required: true, message: '请输入模型标识', trigger: 'blur' }
-      ],
-      imgSize1: [{ required: true, message: '请输入图片大小', trigger: 'blur' }],
-      imgSize2: [{ required: true, message: '请输入图片大小', trigger: 'blur' }]
+      trainRules: {        name: [
+          { required: true, message: '请输入模型标识', trigger: 'blur' }
+        ],
+        imgSize1: [{ required: true, message: '请输入图片大小', trigger: 'blur' }],
+        imgSize2: [{ required: true, message: '请输入图片大小', trigger: 'blur' }]
       },
       data: {}
       /* ------------ */
@@ -319,18 +350,37 @@ export default {
       })
     },
     resetTrainForm () {
-      this.trainForm = this.trainFormTrue
+      let obj = JSON.stringify(this.trainFormTrue)
+      this.trainForm = JSON.parse(obj)
+    },
+    startTrain () {
+      this.trainFormTrue.id = this.data.id
+      let posts = {
+        datal: JSON.stringify(this.trainFormTrue)
+      }
+      this.$http.post('/api/trainModel.action', posts).then(
+        function (res) {
+          let result = JSON.parse(res.bodyText)
+          console.log(result)
+        },
+        function (err) {
+          this.$message.error('服务器请求错误')
+        }
+      )
     },
     getData (data) {
       if (data != null) {
         this.nextFlag = 1
         console.log(data)
+        delete data.path
         this.data = data
       }
     },
     // 预测
-    startPredict () { },
-    startTrain () { }
+    startPredict () {
+
+    },
+
   }
 }
 </script>
@@ -401,5 +451,28 @@ img {
 .demo-trainForm {
   margin-top: 30px;
   width: 80%;
+}
+.box-card {
+  width: 80%;
+  min-width: 200px;
+}
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+.el-card__body {
+  height: 200px;
 }
 </style>
