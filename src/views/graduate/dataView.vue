@@ -8,6 +8,15 @@
       <upload @showbox="getStatus"
               :flag="flag"></upload>
     </el-dialog>
+    <div class="imgDialog">
+      <el-dialog title="图片详情"
+                 :visible.sync="
+                 imgDialogVisible"
+                 width="100%">
+        <viewImgs v-if="imgDialogVisible"
+                  :imgId="chooseId"></viewImgs>
+      </el-dialog>
+    </div>
     <el-table :data="tableData"
               style="width: 100%">
       <el-table-column label="日期"
@@ -40,6 +49,8 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
+          <el-button size="mini"
+                     @click="seeImgs(scope.$index, scope.row)">查看</el-button>
           <div v-show="choose !== scope.$index">
             <el-button size="mini"
                        v-if="!visiType"
@@ -73,11 +84,11 @@
 <script>
 import 'element-ui/lib/theme-chalk/display.css'
 import upload from '@/components/upload'
-
+import viewImgs from '@/components/viewImgs'
 export default {
   name: 'dView',
   components: {
-    upload
+    upload, viewImgs
   },
   props: {
     visiType: {
@@ -95,7 +106,9 @@ export default {
       pageSizes: [5, 10, 15],
       pageSize: 5,
       totalNum: 0,
-      currentPage: 1
+      currentPage: 1,
+      chooseId: '',
+      imgDialogVisible: false
     }
   },
   mounted () {
@@ -186,6 +199,10 @@ export default {
     },
     tolkToFather (data) {
       this.$emit('showbox', data)
+    },
+    seeImgs (index, row) {
+      this.chooseId = row.id
+      this.imgDialogVisible = true
     }
   }
 }
@@ -204,5 +221,9 @@ export default {
 }
 .cell {
   text-align: center;
+}
+.imgDialog {
+  width: 70%;
+  max-height: 600px;
 }
 </style>
