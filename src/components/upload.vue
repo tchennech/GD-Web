@@ -21,6 +21,7 @@
           <el-form-item label="上传文件:"
                         prop="files"
                         :label-width="formLabelWidth">
+            </br>
             <el-upload :file-list="fileList"
                        :accept="acceptable"
                        ref="upload"
@@ -30,16 +31,16 @@
                        :on-change="addFile"
                        :data="realPath"
                        :auto-upload="false"
-                       :drag="true"
                        :limit="10"
+                       list-type="picture-card"
                        :on-error="uploadError"
                        :on-success="uploadSuccess"
                        multiple>
-              <div class="el-upload__text">将文件拖到此处，或
+              <!-- <div class="el-upload__text">将文件拖到此处，或
                 <em>点击上传</em>
               </div>
               <div class="el-upload__text">大于10个图片请添加为压缩文件再上传
-              </div>
+              </div> -->
             </el-upload>
           </el-form-item>
         </el-col>
@@ -52,6 +53,7 @@
     </el-dialog>
     <div slot="footer"
          class="footer">
+      </br>
       <el-button type="primary"
                  @click="newData()">上传</el-button>
     </div>
@@ -178,7 +180,7 @@ export default {
         console.log('成功')
         this.$emit('showbox', flag)
       }.bind(this),
-      500
+        500
       )
     }
   }
@@ -192,7 +194,7 @@ export default {
   padding: 0;
 }
 .el-upload-list__item {
-  width: 47% !important;
+  width: 23% !important;
   float: left !important;
   margin-top: 0 !important;
   margin-bottom: 5px;

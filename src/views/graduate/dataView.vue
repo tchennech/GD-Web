@@ -222,8 +222,12 @@ export default {
 .cell {
   text-align: center;
 }
-.imgDialog {
-  width: 70%;
-  max-height: 600px;
+.imgDialog > .el-dialog__wrapper {
+  width: 100%;
+}
+.imgDialog > .el-dialog__wrapper > .el-dialog {
+  width: 80% !important;
+  max-height: 900px;
+  overflow: auto;
 }
 </style>

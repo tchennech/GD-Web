@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <el-row>
+  <div class="look">
+    <el-row :gutter="20">
       <el-col :span="8"
               v-for="(file, index) in files"
-              :key="index"
-              :offset="index > 0 ? 2 : 0">
-        <el-card :body-style="{ padding: '0px' }">
+              :key="index">
+        <el-card class="img-card"
+                 :body-style="{ padding: '0px' }">
           <img :src="'/api/'+path+file"
                class="image">
           <div style="padding: 14px;">
@@ -95,9 +95,22 @@ export default {
 .clearfix:before,
 .clearfix:after {
   display: table;
-  content: "";
+  content: '';
 }
 .clearfix:after {
   clear: both;
+}
+.img-card {
+  height: 400px;
+}
+.img-card > .el-card__body {
+  height: 100%;
+  width: 100%;
+}
+.img-card > img {
+  height: 80%;
+}
+.look {
+  height: 80%;
 }
 </style>

@@ -49,8 +49,9 @@
              class="line"
              v-if="controlIndex == '0'">
           <div class="line grayBack">
-            <h1 class="titleH1">病理图分类实验平台</h1>
-            <p class="titleP">癌症病理图实验平台，集识别、分类、检测、数据管理一体</p>
+            <h1 class="titleH1">PCC实验平台
+            </h1>
+            <p class="titleP">人工智能赋能医疗</p>
           </div>
           <div class="line">
             <!-- <img src="../assets/back.jpg"
@@ -451,7 +452,7 @@ export default {
 #mainContent {
   width: 100%;
   height: 100%;
-  background: url("../assets/back.jpg");
+  background: url("../assets/back.jpeg");
   background-size: 100% 100%;
   text-align: center;
   border-radius: 9px;
