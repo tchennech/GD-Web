@@ -30,14 +30,18 @@ export default {
     imgId: {
       type: String,
       default: '',
-      dialogImageUrl: '',
-      dialogVisible: false
+    },
+    imgType: {
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
       path: '',
-      files: []
+      files: [],
+      dialogImageUrl: '',
+      dialogVisible: false
     }
   },
   mounted () {
@@ -52,7 +56,11 @@ export default {
       let posts = {
         datal: JSON.stringify(form)
       }
-      this.$http.post('/api/getImgs.action', posts).then(
+      let url = '/api/getImgs.action'
+      if (this.imgType === 0) {
+        url = '/api/getDeteImgs.action'
+      }
+      this.$http.post(url, posts).then(
         function (res) {
           let result = JSON.parse(res.bodyText)
           console.log(result)
