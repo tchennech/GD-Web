@@ -2,12 +2,12 @@
   <div style="height: 100%">
     <el-container style="height: 100%">
       <el-aside style="border-right: solid 1px #e6e6e6;">
-        <el-menu default-active="1-4-1"
+        <el-menu default-active="0"
                  class="el-menu-vertical-demo"
                  @open="handleOpen"
                  @close="handleClose">
           <el-menu-item index="0"
-                        @click="controlIndex = '0'">
+                        @click="openIndex">
             <i class="el-icon-menu"></i>
             <span slot="title">图像检测结果</span>
           </el-menu-item>
@@ -20,8 +20,6 @@
               <span slot="title">总览</span>
               <el-menu-item index="1-1"
                             @click="allCat">查看一览</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="详情">
               <el-menu-item index="1-2"
                             @click="singleCat">查看详细</el-menu-item>
             </el-menu-item-group>
@@ -29,10 +27,8 @@
         </el-menu>
       </el-aside>
       <el-main>
-        <div class="line"
-             v-if="controlIndex == 0">
-          <viewImgs v-if="controlIndex == 0"
-                    :imgId="chooseId"></viewImgs>
+        <div v-if="controlIndex == '0'">
+          <h2 class="titleM">检测结果</h2>
         </div>
 
         <!-- 总览 -->
@@ -44,30 +40,28 @@
           <h2 class="titleM">查看详情</h2>
           <div>
             <p>
-              <span>图片名：</span>
+              <span>图片名：{{datas[chooseIndex].name}}</span>
             </p>
             <p>
-              <span>识别细胞数：</span>
+              <span>识别细胞数：{{datas[chooseIndex].num}}</span>
             </p>
             <p>
-              <span>坏细胞个数：</span>
+              <span>坏细胞个数：{{datas[chooseIndex].badNum}}</span>
             </p>
             <p>
-              <span>好细胞数：</span>
+              <span>好细胞数：{{datas[chooseIndex].goodNum}}</span>
             </p>
 
           </div>
-          <pieChart :name="data[chooseIndex].name"
-                    :id="data[chooseIndex].name"
-                    :data="pieData"
-                    v-if="controlIndex == '2'"></pieChart>
-          :key="index">
+          <pieChart :name="datas[chooseIndex].name"
+                    :id="datas[chooseIndex].name"
+                    :data="pieData"></pieChart>
           <el-card class="img-card"
                    :body-style="{ padding: '0px' }">
-            <img :src="'/api/'+data[chooseIndex].path+data[chooseIndex].name"
+            <img :src="'/api/'+imgInfo.resultPath+datas[chooseIndex].name"
                  class="image">
             <div style="padding: 14px;">
-              <span>{{data[chooseIndex].name}}</span>
+              <span>{{datas[chooseIndex].name}}</span>
             </div>
           </el-card>
         </div>
@@ -80,226 +74,99 @@
 import 'element-ui/lib/theme-chalk/display.css'
 import viewImgs from '@/components/viewImgs'
 import pieChart from '@/components/pieChart.vue'
-
 export default {
-  name: 'gi',
+  name: 'rw',
   components: {
-    viewImgs
+    viewImgs,
+    pieChart
   },
   data () {
     return {
       controlIndex: '0',
-      dialogVisible: false,
       // 默认8中类别对应的颜色
       colors: ['#6CFF9F', '#6CFFF5', '#6CC2FF', '#6C7DFF', '#FF3A3A', '#FF6F3A', '#FFAD3A', '#FFF53A'],
-      data: [],
+      datas: [],
       pieData: [
-        {          value: 0, name: '正常表层细胞', itemStyle: {
-            color: this.colors[0]
-          }        },
-        {          value: 0, name: '正常中底层细胞', itemStyle: {
-            color: this.colors[1]
-          }        },
-        {
-          value: 0, name: '粒细胞',
-          itemStyle: {
-            color: this.colors[2]
-          }        },
-        {          value: 0, name: '腺细胞', itemStyle: {
-            color: this.colors[3]
-          }        },
-        {
-          value: 0, name: '非典型鳞状细胞',
-          itemStyle: {
-            color: this.colors[4]
-          }        }, {
-          value: 0, name: '挖空细胞',
-          itemStyle: {
-            color: this.colors[5]
-          }        }, {
-          value: 0, name: '高核浆比细胞',
-          itemStyle: {
-            color: this.colors[6]
-          }        }, {
-          value: 0, name: '垃圾',
-          itemStyle: {
-            color: this.colors[7]
-          }        },
       ],
+      imgInfo: {},
       chooseIndex: 0,
-      /* 步骤条参数复用 */
-      active: 0,
-      lastStep: false,
-      firstStep: true,
-      nextFlag: 0,
-      /* ------------ */
-      /* 训练 */
-      trainForm: {},
-      trainFormTrue: {},
-      trainRules: {        name: [
-          { required: true, message: '请输入模型标识', trigger: 'blur' }
-        ],
-        imgSize1: [{ required: true, message: '请输入图片大小', trigger: 'blur' }],
-        imgSize2: [{ required: true, message: '请输入图片大小', trigger: 'blur' }]
-      },
-      data: {},
-      chooseId: '',
-      model: {}
+      chooseId: ''
       /* ------------ */
     }
   },
   mounted () {
-    this.personVisibal = false
+    this.initData()
   },
   methods: {
+    initData () {
+      this.pieData = [
+        { value: 0,
+          name: '正常表层细胞',
+          itemStyle: {
+            color: this.colors[0]
+          } },
+        { value: 0,
+          name: '正常中底层细胞',
+          itemStyle: {
+            color: this.colors[1]
+          } },
+        {
+          value: 0,
+          name: '粒细胞',
+          itemStyle: {
+            color: this.colors[2]
+          } },
+        { value: 0,
+          name: '腺细胞',
+          itemStyle: {
+            color: this.colors[3]
+          } },
+        {
+          value: 0,
+          name: '非典型鳞状细胞',
+          itemStyle: {
+            color: this.colors[4]
+          } }, {
+          value: 0,
+          name: '挖空细胞',
+          itemStyle: {
+            color: this.colors[5]
+          } }, {
+          value: 0,
+          name: '高核浆比细胞',
+          itemStyle: {
+            color: this.colors[6]
+          } }, {
+          value: 0,
+          name: '垃圾',
+          itemStyle: {
+            color: this.colors[7]
+          } }]
+      let data = this.$route.query.data
+      data = JSON.parse(data)
+      this.datas = data.pictures
+      delete data.pictures
+      this.imgInfo = data
+      for (let index = 0; index < 8; index++) {
+        this.pieData[index].value = this.datas[0].typeNum[index]
+      }
+    },
     handleOpen () { },
     handleClose () { },
+    openIndex () {
+      this.controlIndex = '0'
+    },
     allCat () {
       this.controlIndex = '1'
     },
     singleCat () {
       this.controlIndex = '2'
       console.log(this.controlIndex)
-    },
-    openModel () {
-      this.controlIndex = 3
-    },
-    trainModel () {
-      this.lastStep = false
-      this.firstStep = true
-      this.active = 0
-      this.nextFlag = 0
-      this.data = {}
-      this.controlIndex = 4
-    },
-    predict () {
-      this.lastStep = false
-      this.firstStep = true
-      this.active = 0
-      this.nextFlag = 0
-      this.data = {}
-      this.model = {}
-      this.controlIndex = 5
-    },
-    // 下一步
-    next () {
-      if (this.active + 1 > this.nextFlag) {
-        this.$message({
-          message: '请完成本步骤',
-          type: 'warning'
-        })
-        return
-      }
-      if (this.active === 1 && this.controlIndex === 4) {
-        if (JSON.stringify(this.trainFormTrue) !== JSON.stringify(this.trainForm)) {
-          this.$confirm('您修改的数据尚未提交', '是否直接进行下一步 ? ', '提示', {
-            confirmButtonText: '继续',
-            cancelButtonText: '返回提交',
-            type: 'warning'
-          }).then(() => {
-            this.nextRight()
-          }).catch(() => {
-
-          })
-        } else {
-          this.nextRight()
-        }
-      } else {
-        this.nextRight()
-      }
-    },
-    nextRight () {
-      this.active++
-      if (this.active === 2) {
-        this.lastStep = true
-      } else if (this.active > 0) {
-        this.firstStep = false
-      }
-    },
-    // 上一步
-    back () {
-      this.active--
-      if (this.active === 0) {
-        this.firstStep = true
-      } else if (this.active < 2) {
-        this.lastStep = false
-      }
-    },
-    // 训练
-    submitTrainForm () {
-      this.$refs['trainForm'].validate((valid) => {
-        if (valid) {
-          this.$message({
-            message: '成功提交',
-            type: 'success'
-          })
-          let obj = JSON.stringify(this.trainForm)
-          this.trainFormTrue = JSON.parse(obj)
-          this.nextFlag = 2
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    resetTrainForm () {
-      let obj = JSON.stringify(this.trainFormTrue)
-      this.trainForm = JSON.parse(obj)
-    },
-    startTrain () {
-      this.trainFormTrue.id = this.data.id
-      let posts = {
-        datal: JSON.stringify(this.trainFormTrue)
-      }
-      this.$http.post('/api/trainModel.action', posts).then(
-        function (res) {
-          let result = JSON.parse(res.bodyText)
-          console.log(result)
-        },
-        function (err) {
-          this.$message.error('服务器请求错误')
-        }
-      )
-    },
-    getData (data) {
-      if (data != null) {
-        this.nextFlag = 1
-        console.log(data)
-        delete data.path
-        this.data = data
-      }
-    },
-    getModel (model) {
-      if (model != null) {
-        this.nextFlag = 2
-        console.log(model)
-        delete model.path
-        this.model = model
-      }
-    },
-    // 预测
-    startPredict () {
-      let form = {}
-      form.dataId = this.data.id
-      form.modelId = this.model.id
-      let posts = {
-        datal: JSON.stringify(form)
-      }
-      this.$http.post('/api/predict.action', posts).then(
-        function (res) {
-          let result = JSON.parse(res.bodyText)
-          console.log(result)
-        },
-        function (err) {
-          this.$message.error('服务器请求错误')
-        }
-      )
     }
 
   }
 }
 </script>
-
 <style>
 * {
   text-decoration: none;
@@ -385,7 +252,7 @@ img {
 .clearfix:before,
 .clearfix:after {
   display: table;
-  content: '';
+  content: "";
 }
 .clearfix:after {
   clear: both;

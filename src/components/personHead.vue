@@ -67,46 +67,46 @@
 </template>
 
 <script>
-import "../assets/headLeader.css"
+import '../assets/headLeader.css'
 
 export default {
   name: 'pHead',
   data () {
     return {
       activeIndex: '1',
-      inputs: '',
+      inputs: ''
     }
   },
   methods: {
     toIndex () {
       this.$router.push({
-        path: "/",
-        name: "/"
-      });
+        path: '/',
+        name: '/'
+      })
     },
     toLearn () {
       this.$router.push({
-        path: "/le",
-        name: "le"
-      });
+        path: '/le',
+        name: 'le'
+      })
     },
     toSI () {
       this.$router.push({
-        path: "/pe",
-        name: "pe"
-      });
+        path: '/pe',
+        name: 'pe'
+      })
     },
     toAdmin () {
       this.$router.push({
-        path: "/handsome/",
-        name: "adindex"
-      });
+        path: '/handsome/',
+        name: 'adindex'
+      })
     },
     jumpToGraduate () {
       this.$router.push({
-        path: "/graduateIndex",
-        name: "graduateIndex"
-      });
+        path: '/graduateIndex',
+        name: 'graduateIndex'
+      })
     }
   }
 

@@ -180,7 +180,7 @@ export default {
         console.log('成功')
         this.$emit('showbox', flag)
       }.bind(this),
-        500
+      500
       )
     }
   }
@@ -194,7 +194,7 @@ export default {
   padding: 0;
 }
 .el-upload-list__item {
-  width: 23% !important;
+  width: 13% !important;
   float: left !important;
   margin-top: 0 !important;
   margin-bottom: 5px;

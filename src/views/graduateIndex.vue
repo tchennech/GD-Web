@@ -430,8 +430,17 @@ export default {
       }
       this.$http.post('/api/predict.action', posts).then(
         function (res) {
-          let result = JSON.parse(res.bodyText)
+          let response = JSON.parse(res.bodyText)
+          let result = response.result
           console.log(result)
+          this.$router.push(
+            {
+              path: '/resultWatch',
+              name: 'resultWatch',
+              query: {
+                data: result
+              }
+            })
         },
         function (err) {
           this.$message.error('服务器请求错误')

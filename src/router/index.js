@@ -13,61 +13,61 @@ Vue.use(Router)
 
 export default new Router({
   routes: [{
-      path: '/',
-      name: '/',
-      component: Indexs,
-      meta: {
-        keepAlive: true
-      }
-    },
-    {
-      path: '/pe',
-      name: 'pe',
-      component: Pe,
-      meta: {
-        keepAlive: true
-      }
-    },
-    {
-      path: '/le',
-      name: 'le',
-      component: Le,
-      meta: {
-        keepAlive: true
-      }
-    },
+    path: '/',
+    name: '/',
+    component: Indexs,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: '/pe',
+    name: 'pe',
+    component: Pe,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: '/le',
+    name: 'le',
+    component: Le,
+    meta: {
+      keepAlive: true
+    }
+  },
 
-    {
-      path: '/handsome/',
-      name: 'adindex',
-      component: adIndex,
-      meta: {
-        keepAlive: true
-      }
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: login,
-      meta: {
-        keepAlive: true
-      }
-    },
-    {
-      path: '/graduateIndex',
-      name: 'graduateIndex',
-      component: graduateIndex,
-      meta: {
-        keepAlive: false
-      }
-    },
-    {
-      path: '/resultWatch',
-      name: 'resultWatch',
-      component: resultWatch,
-      meta: {
-        keepAlive: false
-      }
-    },
+  {
+    path: '/handsome/',
+    name: 'adindex',
+    component: adIndex,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: login,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: '/graduateIndex',
+    name: 'graduateIndex',
+    component: graduateIndex,
+    meta: {
+      keepAlive: false
+    }
+  },
+  {
+    path: '/resultWatch',
+    name: 'resultWatch',
+    component: resultWatch,
+    meta: {
+      keepAlive: false
+    }
+  }
   ]
 })

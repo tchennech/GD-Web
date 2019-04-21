@@ -29,7 +29,7 @@ export default {
   props: {
     imgId: {
       type: String,
-      default: '',
+      default: ''
     },
     imgType: {
       type: Number,
@@ -57,7 +57,7 @@ export default {
         datal: JSON.stringify(form)
       }
       let url = '/api/getImgs.action'
-      if (this.imgType === 0) {
+      if (this.imgType === 1) {
         url = '/api/getDeteImgs.action'
       }
       this.$http.post(url, posts).then(
@@ -103,7 +103,7 @@ export default {
 .clearfix:before,
 .clearfix:after {
   display: table;
-  content: '';
+  content: "";
 }
 .clearfix:after {
   clear: both;
