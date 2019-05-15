@@ -2,10 +2,15 @@
   <div style="height: 100%">
     <el-container style="height: 100%">
       <el-aside style="border-right: solid 1px #e6e6e6;">
-        <el-menu default-active="0"
+        <el-menu default-active="3"
                  class="el-menu-vertical-demo"
                  @open="handleOpen"
                  @close="handleClose">
+          <el-menu-item index="3"
+                        @click="controlIndex='3'">
+            <i class="el-icon-menu"></i>
+            <span slot="title">基本信息</span>
+          </el-menu-item>
           <el-menu-item index="0"
                         @click="openIndex">
             <i class="el-icon-menu"></i>
@@ -29,11 +34,33 @@
       <el-main>
         <div v-if="controlIndex == '0'">
           <h2 class="titleM">检测结果</h2>
+          <viewImgs :imgType="1"
+                    :path="imgInfo.detectorPath"
+                    :datas="datas"
+                    v-if="controlIndex == '0'"></viewImgs>
         </div>
 
         <!-- 总览 -->
         <div v-if="controlIndex == '1'">
           <h2 class="titleM">结果一览</h2>
+          <div>
+            <p>
+              <span>预测的数据集id：{{imgInfo.id}}</span>
+            </p>
+            <p>
+              <span>识别细胞数：{{imgInfo.goodNum + imgInfo.badNum}}</span>
+            </p>
+            <p>
+              <span>坏细胞个数：{{imgInfo.badNum}}</span>
+            </p>
+            <p>
+              <span>好细胞数：{{imgInfo.goodNum}}</span>
+            </p>
+
+          </div>
+          <pieChart :name="'结果总览'"
+                    :id="imgInfo.id"
+                    :data="pieData"></pieChart>
         </div>
         <!-- 详情 -->
         <div v-if="controlIndex == '2'">
@@ -51,19 +78,31 @@
             <p>
               <span>好细胞数：{{datas[chooseIndex].goodNum}}</span>
             </p>
-
           </div>
-          <pieChart :name="datas[chooseIndex].name"
-                    :id="datas[chooseIndex].name"
-                    :data="pieData"></pieChart>
-          <el-card class="img-card"
-                   :body-style="{ padding: '0px' }">
-            <img :src="'/api/'+imgInfo.resultPath+datas[chooseIndex].name"
-                 class="image">
-            <div style="padding: 14px;">
-              <span>{{datas[chooseIndex].name}}</span>
-            </div>
-          </el-card>
+          <el-row>
+            <el-col :span="12">
+              <pieChart :name="datas[chooseIndex].name"
+                        :id="datas[chooseIndex].name"
+                        :data="pieData"></pieChart>
+            </el-col>
+            <el-col :span="12">
+              <el-card class="img-card"
+                       :body-style="{ padding: '0px' }">
+                <img :src="'/api/'+imgInfo.resultPath+datas[chooseIndex].name"
+                     class="image">
+                <div style="padding: 14px;">
+                  <span>{{datas[chooseIndex].name}}</span>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+          <el-button-group>
+            <el-button type="primary"
+                       icon="el-icon-arrow-left"
+                       @click="before">上一个</el-button>
+            <el-button type="primary"
+                       @click="next">下一个<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+          </el-button-group>
         </div>
       </el-main>
     </el-container>
@@ -82,12 +121,11 @@ export default {
   },
   data () {
     return {
-      controlIndex: '0',
+      controlIndex: '3',
       // 默认8中类别对应的颜色
       colors: ['#6CFF9F', '#6CFFF5', '#6CC2FF', '#6C7DFF', '#FF3A3A', '#FF6F3A', '#FFAD3A', '#FFF53A'],
       datas: [],
-      pieData: [
-      ],
+      pieData: [],
       imgInfo: {},
       chooseIndex: 0,
       chooseId: ''
@@ -147,6 +185,13 @@ export default {
       this.datas = data.pictures
       delete data.pictures
       this.imgInfo = data
+      this.imgInfo['goodNum'] = 0
+      this.imgInfo['badNum'] = 0
+      console.log(this.imgInfo)
+      for (let i = 0; i < 3; i++) {
+        this.imgInfo.goodNum += this.datas[i].goodNum
+        this.imgInfo.badNum += this.datas[i].badNum
+      }
       for (let index = 0; index < 8; index++) {
         this.pieData[index].value = this.datas[0].typeNum[index]
       }
@@ -157,11 +202,45 @@ export default {
       this.controlIndex = '0'
     },
     allCat () {
+      console.log(this.datas)
+      for (let j = 0; j < 8; j++) {
+        let num = 0
+        for (let index in this.datas) {
+          num += this.datas[index].typeNum[j]
+        }
+        this.pieData[j].value = num
+      }
+      console.log(this.pieData)
       this.controlIndex = '1'
     },
     singleCat () {
       this.controlIndex = '2'
       console.log(this.controlIndex)
+    },
+    before () {
+      if (this.chooseIndex === 0) {
+        this.openMessage('提示', '已经到达第一个')
+        return
+      }
+      this.chooseIndex--
+    },
+    next () {
+      if (this.chooseIndex === 2) {
+        this.openMessage('提示', '已经到达最后一个')
+        return
+      }
+      this.chooseIndex++
+    },
+    openMessage (title, content) {
+      this.$alert(content, title, {
+        confirmButtonText: '确定',
+        callback: action => {
+          this.$message({
+            type: 'info',
+            message: `action: ${action}`
+          })
+        }
+      })
     }
 
   }
@@ -279,13 +358,14 @@ img {
   background: #ffffff;
 }
 .img-card {
-  height: 400px;
+  height: 600px !important;
+  width: 70%;
 }
 .img-card > .el-card__body {
   height: 100%;
   width: 100%;
 }
 .img-card > img {
-  height: 80%;
+  height: 90%;
 }
 </style>

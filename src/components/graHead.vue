@@ -17,7 +17,7 @@
       <el-col>
         <div style="position:absolute;top:30%;">
           <span style="color:#909399;margin-right:15px">|</span>
-          病理图分类平台
+          病理图像分类平台
         </div>
       </el-col>
       <el-col :span="8">
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import "../assets/headLeader.css"
+import '../assets/headLeader.css'
 
 export default {
   name: 'gHead',
@@ -47,15 +47,15 @@ export default {
     }
   },
   mounted () {
-    this.date = new Date().toLocaleDateString();
+    this.date = new Date().toLocaleDateString()
   },
 
   methods: {
     jumpToPerson () {
       this.$router.push({
-        path: "/",
-        name: "/"
-      });
+        path: '/',
+        name: '/'
+      })
     }
   }
 

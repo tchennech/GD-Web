@@ -4,7 +4,7 @@
       <el-col :span="8"
               v-for="(file, index) in files"
               :key="index">
-        <el-card class="img-card"
+        <el-card class="view-img-card"
                  :body-style="{ padding: '0px' }">
           <img :src="'/api/'+path+file"
                class="image">
@@ -34,11 +34,18 @@ export default {
     imgType: {
       type: Number,
       default: 0
+    },
+    path: {
+      type: String,
+      default: ''
+    },
+    datas: {
+      type: Array,
+      default: []
     }
   },
   data () {
     return {
-      path: '',
       files: [],
       dialogImageUrl: '',
       dialogVisible: false
@@ -47,6 +54,10 @@ export default {
   mounted () {
     this.personVisibal = false
     this.getImgs()
+    console.log('in...')
+    console.log(this.imgType)
+    console.log(this.path)
+    console.log(this.datas)
   },
   methods: {
     getImgs () {
@@ -58,7 +69,11 @@ export default {
       }
       let url = '/api/getImgs.action'
       if (this.imgType === 1) {
-        url = '/api/getDeteImgs.action'
+        this.files = []
+        for (let x in this.datas) {
+          this.files.push(this.datas[x].name)
+        }
+        return
       }
       this.$http.post(url, posts).then(
         function (res) {
@@ -108,14 +123,14 @@ export default {
 .clearfix:after {
   clear: both;
 }
-.img-card {
-  height: 400px;
+.view-img-card {
+  height: 600px !important;
 }
-.img-card > .el-card__body {
+.view-img-card > .el-card__body {
   height: 100%;
   width: 100%;
 }
-.img-card > img {
+.view-img-card > img {
   height: 80%;
 }
 .look {

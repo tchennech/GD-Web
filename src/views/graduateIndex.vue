@@ -49,7 +49,7 @@
              class="line"
              v-if="controlIndex == '0'">
           <div class="line grayBack">
-            <h1 class="titleH1">PCC实验平台
+            <h1 class="titleH1">病理图像分类平台
             </h1>
             <p class="titleP">人工智能赋能医疗</p>
           </div>
@@ -428,24 +428,42 @@ export default {
       let posts = {
         datal: JSON.stringify(form)
       }
+      const loading = this.openFullScreen()
       this.$http.post('/api/predict.action', posts).then(
         function (res) {
+          loading.close()
           let response = JSON.parse(res.bodyText)
-          let result = response.result
-          console.log(result)
-          this.$router.push(
-            {
-              path: '/resultWatch',
-              name: 'resultWatch',
-              query: {
-                data: result
-              }
-            })
+          if (response.status == 0) {
+            let result = response.result
+            console.log(result)
+            this.$router.push(
+              {
+                path: '/resultWatch',
+                name: 'resultWatch',
+                query: {
+                  data: result
+                }
+              })
+          } else {
+            console.log(response)
+            this.$message.error('后台处理错误')
+          }
         },
         function (err) {
+          loading.close()
+          console.log(err)
           this.$message.error('服务器请求错误')
         }
       )
+    },
+    openFullScreen () {
+      const loading = this.$loading({
+        lock: true,
+        text: '算法比较耗时，请勿刷新，预计2分钟...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      return loading
     }
 
   }

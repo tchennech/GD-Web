@@ -1,6 +1,5 @@
 <template>
-  <div :class="className"
-       :id="id"
+  <div :id="id"
        :style="{height:height,width:width}"
        ref="myEchart">
   </div>
@@ -8,7 +7,7 @@
 <script>
 import echarts from 'echarts'
 export default {
-  name: 'upload',
+  name: 'pieCHart',
   props: {
     name: {
       type: String,
@@ -27,8 +26,8 @@ export default {
       default: '500px'
     },
     data: {
-      type: Object,
-      default: [0]
+      type: Array,
+      default: []
     }
   },
   data () {
@@ -37,18 +36,18 @@ export default {
     }
   },
   mounted () {
-    this.initChart();
+    this.initChart()
   },
   beforeDestroy () {
     if (!this.chart) {
       return
     }
-    this.chart.dispose();
-    this.chart = null;
+    this.chart.dispose()
+    this.chart = null
   },
   methods: {
     initChart () {
-      this.chart = echarts.init(this.$refs.myEchart);
+      this.chart = echarts.init(this.$refs.myEchart)
       // 把配置和数据放这里
       this.chart.setOption({
         series: [{
