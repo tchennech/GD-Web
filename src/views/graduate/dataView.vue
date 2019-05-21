@@ -64,6 +64,7 @@
           <el-button size="mini"
                      v-if="visiType"
                      type="danger"
+                     class="deleteButton"
                      @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -229,5 +230,9 @@ export default {
   width: 80% !important;
   max-height: 900px;
   overflow: auto;
+}
+.deleteButton {
+  margin-left: 0 !important;
+  margin-top: 2px !important;
 }
 </style>

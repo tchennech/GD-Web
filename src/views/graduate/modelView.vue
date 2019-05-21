@@ -1,5 +1,14 @@
 <template>
   <div>
+    <div class="imgDialog">
+      <el-dialog title="数据集图像"
+                 :visible.sync="
+                 imgDialogVisible"
+                 width="100%">
+        <viewImgs v-if="imgDialogVisible"
+                  :imgId="19318105756"></viewImgs>
+      </el-dialog>
+    </div>
     <el-table :data="tableData"
               style="width: 100%">
       <el-table-column label="日期"
@@ -26,7 +35,8 @@
       <el-table-column label="数据标识"
                        width="160">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.dataName }}</span>
+          <span style="margin-left: 10px">{{ scope.row.dataName }} <el-button type="text"
+                       @click="imgDialogVisible=true">查看</el-button></span>
         </template>
       </el-table-column>
       <el-table-column label="训练准确率">
@@ -83,8 +93,14 @@
 
 <script>
 import 'element-ui/lib/theme-chalk/display.css'
+import viewImgs from '@/components/viewImgs'
+
 export default {
   name: 'mView',
+
+  components: {
+    viewImgs
+  },
   props: {
     visiType: {
       type: Boolean,
@@ -101,7 +117,8 @@ export default {
       pageSizes: [5, 10, 15],
       pageSize: 5,
       totalNum: 0,
-      currentPage: 1
+      currentPage: 1,
+      imgDialogVisible: false
     }
   },
   mounted () {

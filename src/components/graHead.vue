@@ -43,7 +43,7 @@ export default {
     return {
       activeIndex: '1',
       date: '',
-      loginUser: 'handsome'
+      loginUser: 'tchennech'
     }
   },
   mounted () {

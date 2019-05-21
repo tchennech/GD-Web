@@ -42,6 +42,11 @@
             <i class="el-icon-document"></i>
             <span slot="title">预测结果</span>
           </el-menu-item>
+          <el-menu-item index="4"
+                        @click="toResult">
+            <i class="el-icon-share"></i>
+            <span slot="title">查看往期结果</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-main>
@@ -109,7 +114,7 @@
                             prop="name">
                 <el-input v-model="trainForm.name"></el-input>
               </el-form-item>
-              <el-form-item label="图片大小"
+              <!-- <el-form-item label="图片大小"
                             required>
                 <el-col :span="11">
                   <el-form-item prop="imgSize1">
@@ -123,7 +128,7 @@
                     <el-input v-model="trainForm.imgSize2"></el-input>
                   </el-form-item>
                 </el-col>
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item style="font-size: 18px;"
                             label="选填参数">
               </el-form-item>
@@ -131,8 +136,21 @@
                             label="学习率">
                 <el-input v-model="trainForm.learnRate"></el-input>
               </el-form-item>
-              <el-form-item prop="learnRate">
-                <el-input v-model="trainForm.learnRate"></el-input>
+              <el-form-item prop="totalEpochs"
+                            label="总轮数">
+                <el-input v-model="trainForm.totalEpochs"></el-input>
+              </el-form-item>
+              <el-form-item prop="weightDecay"
+                            label="weight_decay">
+                <el-input v-model="trainForm.weightDecay"></el-input>
+              </el-form-item>
+              <el-form-item prop="learning_rate_decay"
+                            label="学习率下降率">
+                <el-input v-model="trainForm.learning_rate_decay"></el-input>
+              </el-form-item>
+              <el-form-item prop="totalEpochs"
+                            label="batch_size">
+                <el-input v-model="trainForm.batch_size"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary"
@@ -324,6 +342,16 @@ export default {
       this.model = {}
       this.controlIndex = 5
     },
+    toResult () {
+      this.$router.push(
+        {
+          path: '/resultWatch',
+          name: 'resultWatch',
+          query: {
+            data: 0
+          }
+        })
+    },
     // 下一步
     next () {
       if (this.active + 1 > this.nextFlag) {
@@ -394,6 +422,12 @@ export default {
       let posts = {
         datal: JSON.stringify(this.trainFormTrue)
       }
+      const loading = this.openFullScreen2()
+      let this_ = this
+      setTimeout(function () {
+        loading.close()
+        this_.openModel()
+      }, 5000)
       this.$http.post('/api/trainModel.action', posts).then(
         function (res) {
           let result = JSON.parse(res.bodyText)
@@ -433,7 +467,7 @@ export default {
         function (res) {
           loading.close()
           let response = JSON.parse(res.bodyText)
-          if (response.status == 0) {
+          if (response.status === 0) {
             let result = response.result
             console.log(result)
             this.$router.push(
@@ -460,6 +494,15 @@ export default {
       const loading = this.$loading({
         lock: true,
         text: '算法比较耗时，请勿刷新，预计2分钟...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      return loading
+    },
+    openFullScreen2 () {
+      const loading = this.$loading({
+        lock: true,
+        text: '算法比较耗时，请勿刷新',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })

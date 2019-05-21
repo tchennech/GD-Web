@@ -50,7 +50,7 @@ export default new Router({
     name: 'login',
     component: login,
     meta: {
-      keepAlive: true
+      keepAlive: false
     }
   },
   {
