@@ -387,7 +387,8 @@ export default {
       this.chooseIndex--
     },
     next () {
-      if (this.chooseIndex === 2) {
+      let length = this.datas.length
+      if (this.chooseIndex === length - 1) {
         this.openMessage('提示', '已经到达最后一个')
         return
       }
