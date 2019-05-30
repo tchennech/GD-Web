@@ -480,6 +480,7 @@ export default {
               })
           } else {
             console.log(response)
+            loading.close()
             this.$message.error('后台处理错误')
           }
         },

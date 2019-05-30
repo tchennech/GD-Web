@@ -231,12 +231,13 @@ export default {
     }
   },
   mounted () {
+    console.log(this.$route.query.data)
     if (this.$route.query.data === 0 || this.$route.query.data === '0') {
       this.getAllData()
     } else {
       let data = this.$route.query.data
       data = JSON.parse(data)
-      this.initData(data)
+      this.chooseResult(0, data)
     }
   },
   methods: {
